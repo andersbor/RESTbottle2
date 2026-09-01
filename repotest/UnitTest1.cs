@@ -34,7 +34,7 @@ namespace repotest
             // arrange
             BottlesRepository repo = new BottlesRepository();
             // act
-            var bottles = repo.GetBottles();
+            var bottles = repo.GetBottles(minVolume: 2.0, nameStartsWith: "And");
             // assert
             Assert.NotNull(bottles);
             Assert.Empty(bottles);

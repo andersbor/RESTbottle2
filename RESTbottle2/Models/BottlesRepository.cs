@@ -19,13 +19,39 @@ namespace RESTbottle2.Models
         }
 
 
-        public IEnumerable<Bottle> GetBottles(string? nameStartsWith = null)
+        public IEnumerable<Bottle> GetBottles(string? nameStartsWith = null,
+            double? minVolume = null,
+            string? sortOrder = null)
         {
-            if (nameStartsWith == null)
+            IEnumerable<Bottle> result = _bottles.ToList();
+
+            if (minVolume != null)
             {
-                return _bottles.ToList();
+                result = result.Where(b => b.Volume > minVolume);
             }
-            return _bottles.Where(b => b.Name != null && b.Name.StartsWith(nameStartsWith));
+            if (nameStartsWith != null)
+            {
+                result = result.Where(b => b.Name != null && b.Name.StartsWith(nameStartsWith));
+            }
+            if (sortOrder != null)
+            {
+                switch (sortOrder.ToLower())
+                {
+                    case "name":
+                    case "nameasc":
+                        result = result.OrderBy(b => b.Name);
+                        break;
+                    case "namedesc":
+                        result = result.OrderByDescending(b => b.Name);
+                        break; 
+                    case "volume":
+                        result = result.OrderBy(b => b.Volume);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return result;
         }
 
         public Bottle AddBottle(Bottle b)
