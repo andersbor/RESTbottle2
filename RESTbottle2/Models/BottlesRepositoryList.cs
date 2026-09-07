@@ -2,12 +2,12 @@
 
 namespace RESTbottle2.Models
 {
-    public class BottlesRepository
+    public class BottlesRepositoryList : IBottlesRepository
     {
         private List<Bottle> _bottles = new List<Bottle>();
         private int nextId = 1;
 
-        public BottlesRepository(bool incluceTestData = false)
+        public BottlesRepositoryList(bool incluceTestData = false)
         {
             if (incluceTestData)
             {
@@ -43,7 +43,7 @@ namespace RESTbottle2.Models
                         break;
                     case "namedesc":
                         result = result.OrderByDescending(b => b.Name);
-                        break; 
+                        break;
                     case "volume":
                         result = result.OrderBy(b => b.Volume);
                         break;

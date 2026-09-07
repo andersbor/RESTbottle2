@@ -8,7 +8,7 @@ namespace repotest
         public void TestConstructorwithTestData()
         {
             // arrange
-            BottlesRepository repo = new BottlesRepository(incluceTestData: true);
+            BottlesRepositoryList repo = new BottlesRepositoryList(incluceTestData: true);
             // act
             IEnumerable<Bottle> bottles = repo.GetBottles();
             // assert
@@ -20,7 +20,7 @@ namespace repotest
         public void TestConstructorWithoutTestData()
         {
             // arrange
-            BottlesRepository repo = new BottlesRepository(incluceTestData: false);
+            BottlesRepositoryList repo = new BottlesRepositoryList(incluceTestData: false);
             // act
             var bottles = repo.GetBottles();
             // assert
@@ -32,7 +32,7 @@ namespace repotest
         public void TestConstructorWithDefaultValue()
         {
             // arrange
-            BottlesRepository repo = new BottlesRepository();
+            BottlesRepositoryList repo = new BottlesRepositoryList();
             // act
             var bottles = repo.GetBottles(minVolume: 2.0, nameStartsWith: "And");
             // assert
@@ -44,7 +44,7 @@ namespace repotest
         public void TestAdd()
         {
             // arrange
-            BottlesRepository repo = new BottlesRepository();
+            BottlesRepositoryList repo = new BottlesRepositoryList();
             Bottle b = new Bottle { Volume = 1.5, Name = "Test Bottle" };
             
             // act
