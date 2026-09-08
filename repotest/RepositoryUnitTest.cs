@@ -6,23 +6,40 @@ namespace repotest
     public class RepositoryUnitTest
     {
         private bool useDatabase = true;
+        private bool useInMemoryDatabase = true;
         private IBottlesRepository repo;
 
+        private Bottle b1 = new Bottle() { Name = "Default Bottle", Volume = 1.0 };
+        private Bottle b2 = new Bottle() { Name = "Second Bottle", Volume = 2.0 };
+
+
         // TODO delete test
+        // TODO get sort + filter
 
         public RepositoryUnitTest()
         {
             // You can set useDatabase to true if you want to test with a database instead of the in-memory list.
             if (useDatabase) {
-                var optionsBuilder = new DbContextOptionsBuilder<BottlesDbContext>();
-                // https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets
-                optionsBuilder.UseSqlServer(Secrets.ConnectionStringSimply);
-                // connection string structure
-                //   "Data Source=mssql7.unoeuro.com;Initial Catalog=FROM simply.com;Persist Security Info=True;User ID=FROM simply.com;Password=DB PASSWORD FROM simply.com;TrustServerCertificate=True"
-                BottlesDbContext _dbContext = new(optionsBuilder.Options);
-                // clean database table: remove all rows
-                _dbContext.Database.ExecuteSqlRaw("TRUNCATE TABLE dbo.Bottles");
-                repo = new BottlesRepositoryDatabaseEF(_dbContext);
+                if (useInMemoryDatabase)
+                {
+                    var optionsBuilder = new DbContextOptionsBuilder<BottlesDbContext>();
+                    optionsBuilder.UseInMemoryDatabase("TestDatabase");
+                    BottlesDbContext _dbContext = new(optionsBuilder.Options);
+                    _dbContext.Database.EnsureCreated();
+                    repo = new BottlesRepositoryDatabaseEF(_dbContext);
+                }
+                else
+                {
+                    var optionsBuilder = new DbContextOptionsBuilder<BottlesDbContext>();
+                    // https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets
+                    optionsBuilder.UseSqlServer(Secrets.ConnectionStringSimply);
+                    // connection string structure
+                    //   "Data Source=mssql7.unoeuro.com;Initial Catalog=FROM simply.com;Persist Security Info=True;User ID=FROM simply.com;Password=DB PASSWORD FROM simply.com;TrustServerCertificate=True"
+                    BottlesDbContext _dbContext = new(optionsBuilder.Options);
+                    // clean database table: remove all rows
+                    _dbContext.Database.ExecuteSqlRaw("TRUNCATE TABLE dbo.Bottles");
+                    repo = new BottlesRepositoryDatabaseEF(_dbContext);
+                }
             }
             else
             {

@@ -1,8 +1,11 @@
-﻿namespace RESTbottle2.Models
+﻿using System.Globalization;
+
+namespace RESTbottle2.Models
 {
     public class BottlesRepositoryDatabaseEF : IBottlesRepository
     {
         private BottlesDbContext _context;
+     
 
         public BottlesRepositoryDatabaseEF(BottlesDbContext context)
         {
@@ -25,10 +28,38 @@
             return bottle;
         }
 
-        public IEnumerable<Bottle> GetBottles(string? nameStartsWith = null, double? minVolume = null, string? sortOrder = null)
+        public IEnumerable<Bottle> GetBottles(
+            string? nameStartsWith = null, 
+            double? minVolume = null, 
+            string? sortOrder = null)
         {
-            // TODO : Implement filtering and sorting based on the parameters
-            return _context.Bottles;
+            
+            IQueryable<Bottle> query = _context.Bottles;
+            if (nameStartsWith != null)
+            {
+                query = query.Where(b => b.Name != null && b.Name.StartsWith(nameStartsWith));
+            }
+            if (minVolume != null)
+            {
+                query = query.Where(b => b.Volume >= minVolume);
+            }
+            if (sortOrder != null)
+            {
+               switch (sortOrder.ToLower())
+                {
+                    case "name":
+                        query = query.OrderBy(b => b.Name);
+                        break;
+                    case "volume":
+                        query = query.OrderBy(b => b.Volume);
+                        break;
+                    default:
+                        // Invalid sort order, do nothing or throw an exception
+                        break;
+                }
+            }
+
+            return query;
         }
 
         public Bottle? GetById(int id)
