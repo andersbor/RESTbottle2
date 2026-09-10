@@ -17,37 +17,64 @@ namespace RESTbottle2.Controllers
         }
 
         // GET: api/<BottlesController>
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet]
-        public IEnumerable<Bottle> Get()
+        public ActionResult<IEnumerable<Bottle>> Get()
         {
-            return repo.GetBottles();
+            var bottles = repo.GetBottles();
+            return Ok(bottles);
         }
 
         // GET api/<BottlesController>/5
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("{id}")]
-        public Bottle? Get(int id)
+        public ActionResult<Bottle?> Get(int id)
         {
-            // TODO handle null
-            return repo.GetById(id);
+            Bottle? bottle = repo.GetById(id);
+            if (bottle == null)
+            {
+                return NotFound("No such bottle, id: " + id);
+            }
+            return Ok(bottle);
         }
 
         // POST api/<BottlesController>
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [HttpPost]
-        public void Post([FromBody] Bottle value)
+        public ActionResult<Bottle> Post([FromBody] Bottle value)
         {
-            repo.AddBottle(value);
+
+           Bottle newBottle = repo.AddBottle(value);
+            return CreatedAtAction(nameof(Get), new { id = newBottle.Id }, newBottle);
         }
 
         // PUT api/<BottlesController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<Bottle> Put(int id, [FromBody] Bottle value)
         {
+            Bottle? bottle = repo.Update(id, value);
+            if (bottle == null)
+            {
+                return NotFound("No such bottle, id: " + id);
+            }
+            return Ok(bottle);
         }
 
         // DELETE api/<BottlesController>/5
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult<Bottle> Delete(int id)
         {
+            Bottle? bottle = repo.DeleteById(id);
+            if (bottle == null)
+            {
+                return NotFound("No such bottle, id: " + id);
+            }
+            return Ok(bottle);
         }
     }
 }
