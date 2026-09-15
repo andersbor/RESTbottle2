@@ -18,18 +18,27 @@ namespace RESTbottle2.Controllers
 
         // GET: api/<BottlesController>
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [HttpGet]
-        public ActionResult<IEnumerable<Bottle>> Get()
+        public ActionResult<IEnumerable<Bottle>> Get(
+            [FromQuery] string? nameStartsWith,
+            [FromQuery] int? minVolume,
+            [FromQuery] string? sortOrder)
         {
-            var bottles = repo.GetBottles();
-            return Ok(bottles);
+            IEnumerable<Bottle> bottles = repo.GetBottles(nameStartsWith, minVolume, sortOrder);
+            if (bottles.Any())
+            {
+                return Ok(bottles);
+            }
+            
+            return NoContent();
         }
 
         // GET api/<BottlesController>/5
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("{id}")]
-        public ActionResult<Bottle?> Get(int id)
+        public ActionResult<Bottle?> Get([FromRoute] int id)
         {
             Bottle? bottle = repo.GetById(id);
             if (bottle == null)
