@@ -21,7 +21,7 @@ namespace RESTbottle2.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [HttpGet]
         public ActionResult<IEnumerable<Bottle>> Get(
-            [FromQuery] string? nameStartsWith,
+            [FromQuery] string? nameStartsWith, 
             [FromQuery] int? minVolume,
             [FromQuery] string? sortOrder)
         {
