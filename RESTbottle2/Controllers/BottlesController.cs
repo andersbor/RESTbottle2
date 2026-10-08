@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RESTbottle2.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -50,6 +51,7 @@ namespace RESTbottle2.Controllers
 
         // POST api/<BottlesController>
         [ProducesResponseType(StatusCodes.Status201Created)]
+        //[Authorize(Roles ="Admin")]
         [HttpPost]
         public ActionResult<Bottle> Post([FromBody] Bottle value)
         {
@@ -62,6 +64,7 @@ namespace RESTbottle2.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = "Admin")]
         public ActionResult<Bottle> Put(int id, [FromBody] Bottle value)
         {
             Bottle? bottle = repo.Update(id, value);
@@ -76,6 +79,7 @@ namespace RESTbottle2.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public ActionResult<Bottle> Delete(int id)
         {
             Bottle? bottle = repo.DeleteById(id);
