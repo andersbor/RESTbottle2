@@ -7,9 +7,9 @@ namespace RESTbottle2.Models
         private List<Bottle> _bottles = new List<Bottle>();
         private int nextId = 1;
 
-        public BottlesRepositoryList(bool incluceTestData = false)
+        public BottlesRepositoryList(bool includeTestData = false)
         {
-            if (incluceTestData)
+            if (includeTestData)
             {
                 AddBottle(new Bottle() { Name = "Default Bottle", Volume = 1.0 });
                 AddBottle(new Bottle() { Name = "Second Bottle", Volume = 2.0 });
